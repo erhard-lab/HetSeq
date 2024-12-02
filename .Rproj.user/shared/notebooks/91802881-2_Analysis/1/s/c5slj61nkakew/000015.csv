@@ -1,0 +1,2 @@
+"0","# ggsave(""plots/scifateFiltering/gcpercent_box.png"", height=2.2,width=2.2, bg=""white"")"
+"0","# ggsave(""plots/scifateFiltering/gcpercent_box.svg"", height=2.2,width=2.2, bg=""white"", device=grDevices::svg())"

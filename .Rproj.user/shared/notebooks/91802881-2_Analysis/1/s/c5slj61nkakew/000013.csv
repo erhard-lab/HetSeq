@@ -1,0 +1,10 @@
+"0","#ggsave(""plots/scifateFiltering/dimplot_time.png"", width=3.3, height=2.25)"
+"0","#ggsave(""plots/scifateFiltering/dimplot_time.svg"", width=3, height=2, device=grDevices::svg())"
+"0",""
+"0",""
+"0","tab <- FetchData(data, c(""treatmentTime"", ""dex.percent"", ""dex.percent.new""))"
+"0","tab_melt <- melt(tab)"
+"2","Using treatmentTime as id variables
+"
+"0","ggplot(tab_melt, aes(x=treatmentTime, y=value,color=variable))+geom_boxplot()+theme_cowplot()+theme(axis.title.x = element_blank())+"
+"0","  scale_color_manual(values = c(""#298c8c"", ""#800074""),labels = c(""total RNA"", ""new RNA""))+ylab(""DEX score"")+theme(text=element_text(size = textsize, family = mainfont), axis.text=element_text(size=axissize), legend.text = element_text(size=legendsize), legend.title = element_blank(), legend.position = ""bottom"")"
