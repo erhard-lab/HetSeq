@@ -1,3 +1,6 @@
+library(ggrastr)
+library(cowplot)
+library(ggrepel)
 #' Plot Heterogeneity-seq Classifier Results
 #'
 #' This plotting functions creates AUC Scatter plots to visualize Classifier Results.
