@@ -41,7 +41,7 @@ This would generate previous RNA profiles for a labeling duration of 2 hours. Fo
 
 ## Building cellular trajectories
 
-To connect cells treated cells back to pre-treated control cells, we need to build cellular trajectories. This segment will demonstrate how to generate these trajectories based on metabolic labeling information using the HetSeq package. Cell-cell trajectories built any other way can also be utilized, but need to be in the following matrix format, where every row represents one trajectory from the last time point back to the first (control sample) time point:
+To connect treated cells back to pre-treated control cells, we need to build cellular trajectories. This segment will demonstrate how to generate these trajectories based on metabolic labeling information using the HetSeq package. Cell-cell trajectories built any other way can also be utilized, but need to be in the following matrix format, where every row represents one trajectory connecting a cell from the last time point back to a cell in the first (control sample) time point:
 
 
 	| Timepoint1 | Timepoint2 | Timepoint3 | Timepoint4 | Timepoint5 |
@@ -67,6 +67,28 @@ First, we create distance matrices between cells of two time points, using the t
 
 ## Predicting cellular outcomes using an SVM
 
+The cellular trajectories allows us to connect a treatment outcome (from cells in the last time point) with a pre-treatment cellular profile (from cells in the first time point). This way, we can use pre-treatment gene-expression of single genes to predict the treatment outcomes. If the expression of a single gene is sufficient to accurately predict the outcome, then we can identify this gene as a potential pathway modulator.
+
+HetSeq offers the Hetseq() function as a wrapper for all implemented approaches. You can call the SVM-based classification either via the wrapper with the method="classify" parameter or directly via HetseqClassify():
+
+	svm_results <- HetseqClassify(data, trajectories, score.name="score.name", num_cores=8)
+ 
+ This is a mimial example of running the classifier. The score.name refers to the name of a meta data column which contains the information on treatment outcome (e.g. viral load, gene expression score of target genes, ...). From this, and the quantiles parameter (default: c(0.25, 0.75)), cells are divided into Low, Middle and High response groups. Finally, the classifier tries to predict either Low or High responses. All of these factors paramters can be changed via the quantiles, compareGroups and posClass features. Instead to the score.name parameter, you can provide a vector of predefined response groups via the score.group parameter. In that case, the compareGroups parameter must be adapted to fit the manually defined response group names.
+ 
+You can further specify additional informative features with the basefeatures parameter and, if you want to save runtime, specify a subset of genes to analyze:
+
+	svm_results <- HetseqClassify(data, trajectories, score.name="score.name", basefeatures = c("cellcycle_score"), genes = gene_subset, num_cores=8)
+ 	PlotClassify(svm_results)
+
+The PlotClassify-function then directly genereates an AUC-plot to visualize these results.
+
 
 ## Identifying causal pathway modulators with a Causal Inference approach
+
+If you want to restrict the list of reported candidate genes to strictly causal genes, you can call the causal inference approach in a similar way:
+
+	svm_results <- HetseqDoubleML(data, trajectories, score.name="score.name", basefeatures = c("cellcycle_score"), genes = gene_subset, background = background_genes, num_cores=32)
+ 	PlotDoubleML(svm_results)
+
+For this approach, reducing the set of tested genes and background genes, as well as increasing the number of cores is recommended, as this approach can take several hours, depending on the size of the data set and the number of genes tested.
 
