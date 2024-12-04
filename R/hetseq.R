@@ -32,13 +32,13 @@ unregister_pp <- function() {
 #' # Using a Classifier and Causal Inference (doubleML) to predict cellular outcomes by expression of single genes. Effect of genes on the outcome are estimated to distinguish genes with causal effects from correlating genes.
 #' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
 #' @export
-hetseq = function(method=c("test", "classify", "doubleML"), ...){
+Hetseq = function(method=c("test", "classify", "doubleML"), ...){
     if (method == "test") {
-      return(hetseq.test(...))
+      return(HetseqTest(...))
     } else if (method == "classify") {
-      return(hetseq.classify(...))
+      return(HetseqClassify(...))
     } else if (method == "doubleML") {
-      return(hetseq.doubleML(...))
+      return(HetseqDoubleML(...))
     } else {
       stop("Invalid hetseq method specified. Please use 'test', 'classify', or 'doubleML'.")
     }
@@ -57,7 +57,7 @@ hetseq = function(method=c("test", "classify", "doubleML"), ...){
 #' hetseq(method="test", mat, group=="High",group=="Low")
 #' 
 #' @export
-hetseq.test = function(mat,A,B) {
+HetseqTest = function(mat,A,B) {
   ps=sapply(1:nrow(mat),function(i) wilcox.test(mat[i,A],mat[i,B])$p.value)
   eff=sapply(1:nrow(mat),function(i) (log1p(mean(expm1(mat[i,A])))-log1p(mean(expm1(mat[i,B]))))/log(2))
   expr=sapply(1:nrow(mat),function(i) log1p(mean(expm1(mat[i,A|B]))))
@@ -87,7 +87,7 @@ hetseq.test = function(mat,A,B) {
 #' @examples 
 #' hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
 #' @export
-hetseq.classify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
+HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
   library(parallel)
   library(doParallel)
   library(e1071)
@@ -225,7 +225,7 @@ hetseq.classify<-function(object, trajectories, score.group = NULL, score.name=N
 #' @examples 
 #' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
 #' @export
-hetseq.doubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
+HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
   library(parallel)
   library(doParallel)
   library(e1071)

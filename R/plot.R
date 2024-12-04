@@ -16,7 +16,7 @@
 #' res=hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=posClass)
 #' plot.classify(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
-plot.classify <- function(table, highlights, highlights.color=Seurat::DiscretePalette(36), highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
+PlotClassify <- function(table, highlights=NULL, highlights.color=Seurat::DiscretePalette(36), highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
   plot <- ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=density2d(x=AUC,y=LFC, n = density.n)))+geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
     geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)+geom_hline(yintercept = 0)+
@@ -48,7 +48,7 @@ plot.classify <- function(table, highlights, highlights.color=Seurat::DiscretePa
 #' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
 #' plot.doubleml(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
-plot.doubleml <- function(table, highlights, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=Seurat::DiscretePalette(36),highlight.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
+PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=Seurat::DiscretePalette(36),highlight.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
   plot<- ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=density2d(Estimate,-log10(p.adj), n=density.n)))+geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
     geom_hline(yintercept = -log10(p.cutoff), linetype=linetype)+
