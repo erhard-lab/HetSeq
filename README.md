@@ -80,7 +80,7 @@ You can further specify additional informative features with the basefeatures pa
 	svm_results <- HetseqClassify(data, trajectories, score.name="score.name", basefeatures = c("cellcycle_score"), genes = gene_subset, num_cores=8)
  	PlotClassify(svm_results)
 
-The PlotClassify-function then directly genereates an AUC-plot to visualize these results.
+The PlotClassify-function then directly generates an AUC-plot to visualize these results.
 
 
 ## Identifying causal pathway modulators with a Causal Inference approach
@@ -90,5 +90,4 @@ If you want to restrict the list of reported candidate genes to strictly causal 
 	svm_results <- HetseqDoubleML(data, trajectories, score.name="score.name", basefeatures = c("cellcycle_score"), genes = gene_subset, background = background_genes, num_cores=32)
  	PlotDoubleML(svm_results)
 
-For this approach, reducing the set of tested genes and background genes, as well as increasing the number of cores is recommended, as this approach can take several hours, depending on the size of the data set and the number of genes tested.
-
+For this approach, it is recommended to reduce the set of tested and background genes and to increase the number of cores, as the analysis can take several hours depending on the dataset size and the number of genes involved.
