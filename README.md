@@ -20,7 +20,7 @@ caret,doParallel,DoubleML,e1071,foreach,ggplot2,grf,igraph,lpSolve,mlr3,mlr3lear
 ## Calculating previous RNA profiles (optional)
 
 
-When creating trajectories based on labeling information, we can connect cells across time points by calculating the distances between expression profiles of cells. If labeling information is available (e.g. in a scSLAM-seq experiment), we can calculate distances between the pre-existing (old/unlabeled) RNA of cells from a time point with the total RNA profiles of cells from a previous time point, as this old RNA profile represents RNA from before the onset of labeling and should therefore be similar to the overall expression of cells from the previous time point. However, we can even go a step further and take half-lives and RNA degradation into account to calculate a more accurate representation of a cells previous RNA profile. For this, we can make use of the [grandR](https://github.com/erhard-lab/grandR) package:
+When creating trajectories based on labeling information, we can connect cells across time points by calculating the distances between expression profiles of cells. If labeling information is available (e.g., in a scSLAM-seq experiment), we can compute distances between the pre-existing (old/unlabeled) RNA profiles of cells at a given time point and the total RNA profiles of cells from the preceding time point. Since the old RNA reflects transcripts present before labeling began, it should closely resemble the overall expression profiles of cells from the earlier time point. However, we can even go a step further and take half-lives and RNA degradation into account to calculate a more accurate representation of a cells previous RNA profile. For this, we can make use of the [grandR](https://github.com/erhard-lab/grandR) package:
 
 
 	library(Seurat)
@@ -30,8 +30,8 @@ When creating trajectories based on labeling information, we can connect cells a
 	labeling_dur = 2
 
 	SetParallel(cores = 16) 
-	data_grandR<-ComputeSteadyStateHalfLives(data_grandR, as.analysis = F)
-	HL <- GetMatrix(data_grandR, "HL")
+	data_grandR<-ComputeSteadyStateHalfLives(data_grandR, as.analysis = F) #Compute half-lives
+	HL <- GetMatrix(data_grandR, "HL") # Extract half-lives from the grandR object
 	prevRNA = (data@assays$oldRNA$counts * exp(labeling_dur * log(2)/pmin(pmax(HL, 0.25), 24)))[rownames(data),colnames(data)]
 	data@assays$prevRNA <- CreateAssayObject(counts = prevRNA, key = "prevrna_")
 
@@ -55,7 +55,7 @@ To connect treated cells back to pre-treated control cells, we need to build cel
 
 Consider a Seurat object, where the time course information is saved in the treatmentTime meta data and we have total RNA (RNA) and previous RNA (prevRNA) assays:
 
-	treatment.list <- SplitObject(subset(data, subset = treatmentTime %in% c("0h", "2h", "4h")), split.by = "treatmentTime")
+	treatment.list <- SplitObject(subset(data, split.by = "treatmentTime")
 	D.list=list(
 	  distmat(treatment.list[["0h"]],treatment.list[["2h"]], "RNA", "prevRNA"),
 	  distmat(treatment.list[["2h"]],treatment.list[["4h"]], "RNA", "prevRNA")
