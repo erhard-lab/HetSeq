@@ -19,17 +19,21 @@ library(ggrepel)
 #' res=hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=posClass)
 #' plot.classify(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
-PlotClassify <- function(table, highlights=NULL, highlights.color=Seurat::DiscretePalette(36), highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
+PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
   plot <- ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=density2d(x=AUC,y=LFC, n = density.n)))+geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
     geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)+geom_hline(yintercept = 0)+
     theme(legend.position="none")
   
-  for(i in c(1:length(highlights))){
-    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights[[i]] & table$AUC > highlights.cutoff,],aes(x=AUC,y=LFC),color=highlights.color[i], scale=point.scale)
-    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights[[i]] & table$AUC > label.cutoff,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color[i])
+  if(length(highlights)!=length(highlights.color)){
+    warning("Number of highlights did not match number of highlight colors. Using default color scale.")
+    highlights.color=scales::hue_pal()(length(highlights))
   }
   
+  if(length(highlights)!=0){
+    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights & table$AUC > highlights.cutoff,],aes(x=AUC,y=LFC),color=highlights.color, scale=point.scale)
+    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights & table$AUC > label.cutoff,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color)
+  }
   plot
 }
 
@@ -51,17 +55,34 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=Seurat::Discre
 #' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
 #' plot.doubleml(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
-PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=Seurat::DiscretePalette(36),highlight.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
+PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=NULL, highlight.p.cutoff=NULL, highlight.est.cutoff=NULL, label.p.cutoff=NULL, label.est.cutoff=NULL, label.repulsion = 1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
   plot<- ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=density2d(Estimate,-log10(p.adj), n=density.n)))+geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
     geom_hline(yintercept = -log10(p.cutoff), linetype=linetype)+
     theme(legend.position="none")
+  
+  if(length(highlights)!=length(highlights.color)){
+    warning("Number of highlights did not match number of highlight colors. Using default color scale.")
+    highlights.color=scales::hue_pal()(length(highlights))
+  }
+  if(is.null(highlight.p.cutoff)){
+    highlight.p.cutoff=p.cutoff
+  }
+  if(is.null(highlight.est.cutoff)){
+    highlight.est.cutoff=0
+  }
+  if(is.null(label.p.cutoff)){
+    label.p.cutoff=highlight.p.cutoff
+  }
+  if(is.null(label.est.cutoff)){
+    label.est.cutoff=highlight.est.cutoff
+  }
   if(!is.null(est.cutoff)){
     plot<-plot+geom_vline(c(-est.cutoff,est.cutoff), linetype=linetype)
   }
-  for(i in c(1:length(highlights))){
-    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights[[i]] & table$p.adj > p.cutoff,],aes(x=Estimate,y=p.adj),color=highlights.color[i], scale=point.scale)
-    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights[[i]] & table$p.adj > label.cutoff,], aes(x=Estimate,y=p.adj,label=Gene),color=highlights.color[i])
+  if(length(highlights)!=0){
+    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights & table$p.adj < highlight.p.cutoff & abs(table$Estimate) > highlight.est.cutoff,],aes(x=Estimate,y=-log10(p.adj)),color=highlights.color, scale=point.scale)
+    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights & table$p.adj < label.p.cutoff & abs(table$Estimate) > label.est.cutoff,], aes(x=Estimate,y=-log10(p.adj),label=Gene),color=highlights.color, force = label.repulsion)
   }
   
   plot
