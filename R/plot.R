@@ -20,8 +20,8 @@ library(ggrepel)
 #' plot.classify(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
 PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
-  plot <- ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=density2d(x=AUC,y=LFC, n = density.n)))+geom_point_rast(scale=point.scale)+
-    scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
+  plot <- ggplot2::ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=grandR::density2d(x=AUC,y=LFC, n = density.n)))+ggrastr::geom_point_rast(scale=point.scale)+
+    viridis::scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+cowplot::theme_cowplot()+
     geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)+geom_hline(yintercept = 0)+
     theme(legend.position="none")
   
@@ -31,8 +31,8 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
   }
   
   if(length(highlights)!=0){
-    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights & table$AUC > highlights.cutoff,],aes(x=AUC,y=LFC),color=highlights.color, scale=point.scale)
-    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights & table$AUC > label.cutoff,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color)
+    plot <- plot + ggrastr::geom_point_rast(data=table[table$Gene%in%highlights & table$AUC > highlights.cutoff,],aes(x=AUC,y=LFC),color=highlights.color, scale=point.scale)
+    plot <- plot + ggrepel::geom_label_repel(data=table[table$Gene%in%highlights & table$AUC > label.cutoff,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color)
   }
   plot
 }
@@ -61,8 +61,8 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
 #' plot.doubleml(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
 #' @export
 PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=NULL, highlight.p.cutoff=NULL, highlight.est.cutoff=NULL, label.p.cutoff=NULL, label.est.cutoff=NULL, label.repulsion = 1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
-  plot<- ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=density2d(Estimate,-log10(p.adj), n=density.n)))+geom_point_rast(scale=point.scale)+
-    scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
+  plot<- ggplot2::ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=grandR::density2d(Estimate,-log10(p.adj), n=density.n)))+ggrastr::geom_point_rast(scale=point.scale)+
+    viridis::scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+theme_cowplot()+
     geom_hline(yintercept = -log10(p.cutoff), linetype=linetype)+
     theme(legend.position="none")
   
@@ -86,8 +86,8 @@ PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NUL
     plot<-plot+geom_vline(c(-est.cutoff,est.cutoff), linetype=linetype)
   }
   if(length(highlights)!=0){
-    plot <- plot + geom_point_rast(data=table[table$Gene%in%highlights & table$p.adj < highlight.p.cutoff & abs(table$Estimate) > highlight.est.cutoff,],aes(x=Estimate,y=-log10(p.adj)),color=highlights.color, scale=point.scale)
-    plot <- plot + geom_label_repel(data=table[table$Gene%in%highlights & table$p.adj < label.p.cutoff & abs(table$Estimate) > label.est.cutoff,], aes(x=Estimate,y=-log10(p.adj),label=Gene),color=highlights.color, force = label.repulsion)
+    plot <- plot + ggrastr::geom_point_rast(data=table[table$Gene%in%highlights & table$p.adj < highlight.p.cutoff & abs(table$Estimate) > highlight.est.cutoff,],aes(x=Estimate,y=-log10(p.adj)),color=highlights.color, scale=point.scale)
+    plot <- plot + ggrepel::geom_label_repel(data=table[table$Gene%in%highlights & table$p.adj < label.p.cutoff & abs(table$Estimate) > label.est.cutoff,], aes(x=Estimate,y=-log10(p.adj),label=Gene),color=highlights.color, force = label.repulsion)
   }
   
   plot

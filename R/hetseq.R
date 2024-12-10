@@ -58,10 +58,10 @@ Hetseq = function(method=c("test", "classify", "doubleML"), ...){
 #' 
 #' @export
 HetseqTest = function(mat,A,B) {
-  ps=sapply(1:nrow(mat),function(i) wilcox.test(mat[i,A],mat[i,B])$p.value)
+  ps=sapply(1:nrow(mat),function(i) stats::wilcox.test(mat[i,A],mat[i,B])$p.value)
   eff=sapply(1:nrow(mat),function(i) (log1p(mean(expm1(mat[i,A])))-log1p(mean(expm1(mat[i,B]))))/log(2))
   expr=sapply(1:nrow(mat),function(i) log1p(mean(expm1(mat[i,A|B]))))
-  re = data.frame(Expr=expr,LFC=eff,P=ps, Q = p.adjust(ps,method="BH"))
+  re = data.frame(Expr=expr,LFC=eff,P=ps, Q = stats::p.adjust(ps,method="BH"))
   rownames(re) = rownames(mat)
   re
 }
