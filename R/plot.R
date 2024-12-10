@@ -5,7 +5,7 @@ library(ggrepel)
 #'
 #' This plotting functions creates AUC Scatter plots to visualize Classifier Results.
 #' @param table Table from HetSeq using the Classifier method.
-#' @param highlights A list of gene vectors to highlight in the plot.
+#' @param highlights A vector of genes to highlight in the plot.
 #' @param highlights.color A vector of colors for gene highlights.
 #' @param highlights.cutoff Set a cutoff at which gene highlights should be set.
 #' @param label.cutoff Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.
@@ -41,10 +41,15 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
 #'
 #' This plotting functions creates a Vulcano Plot to visualize DoubleML Results.
 #' @param table Table from the Hetseq using the doubleML method.
-#' @param highlights A list of gene vectors to highlight in the plot.
+#' @param p.cutoff Adds a dashed horizontal line at the given adjusted p-value cutoff.
+#' @param est.cutoff Adds two dashed vertical lines (+/-) at the given estimate cutoff.
+#' @param highlights A vector of genes to highlight in the plot.
 #' @param highlights.color A vector of colors for gene highlights.
-#' @param highlights.cutoff Set a cutoff at which gene highlights should be set.
-#' @param label.cutoff Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.
+#' @param highlight.p.cutoff Set a adjusted p-value cutoff below which genes will be highlighted. Defaults to the p.cutoff.
+#' @param highlight.est.cutoff Set an estimate cutoff above/below which genes will be highlighted. Defaults to 0.
+#' @param label.p.cutoff Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.p.cutoff.
+#' @param label.est.cutoff Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.est.cutoff.
+#' @param label.repulsion Represents the force parameter of the ggrepel::geom_label_repel() function. Higher values reduce label overlap.
 #' @param density.n Set granularity of 2d density color.
 #' @param point.scale Set point size.
 #' @param xlab Set label of the x-axis.

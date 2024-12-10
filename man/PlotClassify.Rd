@@ -7,7 +7,7 @@
 PlotClassify(
   table,
   highlights = NULL,
-  highlights.color = Seurat::DiscretePalette(36),
+  highlights.color = NULL,
   highlights.cutoff = NULL,
   label.cutoff = 1.1,
   density.n = 500,
@@ -20,7 +20,7 @@ PlotClassify(
 \arguments{
 \item{table}{Table from HetSeq using the Classifier method.}
 
-\item{highlights}{A list of gene vectors to highlight in the plot.}
+\item{highlights}{A vector of genes to highlight in the plot.}
 
 \item{highlights.color}{A vector of colors for gene highlights.}
 

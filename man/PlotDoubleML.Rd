@@ -9,9 +9,12 @@ PlotDoubleML(
   highlights = NULL,
   p.cutoff = 0.05,
   est.cutoff = NULL,
-  highlights.color = Seurat::DiscretePalette(36),
-  highlight.cutoff = NULL,
-  label.cutoff = 1.1,
+  highlights.color = NULL,
+  highlight.p.cutoff = NULL,
+  highlight.est.cutoff = NULL,
+  label.p.cutoff = NULL,
+  label.est.cutoff = NULL,
+  label.repulsion = 1,
   density.n = 500,
   point.scale = 0.5,
   xlab = "Estimate",
@@ -22,11 +25,23 @@ PlotDoubleML(
 \arguments{
 \item{table}{Table from the Hetseq using the doubleML method.}
 
-\item{highlights}{A list of gene vectors to highlight in the plot.}
+\item{highlights}{A vector of genes to highlight in the plot.}
+
+\item{p.cutoff}{Adds a dashed horizontal line at the given adjusted p-value cutoff.}
+
+\item{est.cutoff}{Adds two dashed vertical lines (+/-) at the given estimate cutoff.}
 
 \item{highlights.color}{A vector of colors for gene highlights.}
 
-\item{label.cutoff}{Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.}
+\item{highlight.p.cutoff}{Set a adjusted p-value cutoff below which genes will be highlighted. Defaults to the p.cutoff.}
+
+\item{highlight.est.cutoff}{Set an estimate cutoff above/below which genes will be highlighted. Defaults to 0.}
+
+\item{label.p.cutoff}{Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.p.cutoff.}
+
+\item{label.est.cutoff}{Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.est.cutoff.}
+
+\item{label.repulsion}{Represents the force parameter of the ggrepel::geom_label_repel() function. Higher values reduce label overlap.}
 
 \item{density.n}{Set granularity of 2d density color.}
 
@@ -37,8 +52,6 @@ PlotDoubleML(
 \item{ylab}{Set label of the y-axis.}
 
 \item{linetype}{Set the linetype of the p-value and estimate cutoff line.}
-
-\item{highlights.cutoff}{Set a cutoff at which gene highlights should be set.}
 }
 \value{
 ggplot object

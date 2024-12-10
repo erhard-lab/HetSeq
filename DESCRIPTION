@@ -27,15 +27,13 @@ Depends:
     R (>= 4.1.2)
 Imports: 
     caret,
+    cowplot,
     doParallel,
     DoubleML,
     e1071,
     foreach,
-    ggplot2,
     ggrastr,
     ggrepel,
-    cowplot,
-    grf,
     igraph,
     lpSolve,
     mlr3,
@@ -43,6 +41,7 @@ Imports:
     parallel,
     pROC,
     reshape2,
+    scales,
     Seurat
 Encoding: UTF-8
 RoxygenNote: 7.2.3
