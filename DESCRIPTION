@@ -24,7 +24,8 @@ License: Apache License (>= 2)
 URL: https://github.com/erhard-lab/HetSeq
 BugReports: https://github.com/erhard-lab/HetSeq/issues
 Depends: 
-    R (>= 4.1.2)
+    R (>= 4.1.2),
+    ggplot2
 Imports: 
     caret,
     cowplot,
