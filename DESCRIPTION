@@ -32,8 +32,10 @@ Imports:
     DoubleML,
     e1071,
     foreach,
+    ggplot2,
     ggrastr,
     ggrepel,
+    grandR,
     igraph,
     lpSolve,
     mlr3,
@@ -42,6 +44,7 @@ Imports:
     pROC,
     reshape2,
     scales,
-    Seurat
+    Seurat,
+    stats
 Encoding: UTF-8
 RoxygenNote: 7.2.3
