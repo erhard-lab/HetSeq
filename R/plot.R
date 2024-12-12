@@ -1,4 +1,3 @@
-library(ggplot2)
 #' Plot Heterogeneity-seq Classifier Results
 #'
 #' This plotting functions creates AUC Scatter plots to visualize Classifier Results.
@@ -7,6 +6,7 @@ library(ggplot2)
 #' @param highlights.color A vector of colors for gene highlights.
 #' @param highlights.cutoff Set a cutoff at which gene highlights should be set.
 #' @param label.cutoff Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.
+#' @param plot.baseline Inserts a vertical line at the baseline AUC value (= AUC of the classifier with basefeatures but no further gene info).
 #' @param density.n Set granularity of 2d density color.
 #' @param point.scale Set point size.
 #' @param xlab Set label of the x-axis.
@@ -14,10 +14,10 @@ library(ggplot2)
 #' @param linetype Set the linetype of the baseline AUC line.
 #' @return ggplot object
 #' @examples 
-#' res=hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=posClass)
-#' plot.classify(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
+#' res=HetseqClassify(data, trajectories, score.name = "score")
+#' PlotClassify(res, highlights=c("GAPDH", "MYC", "ISG15"))
 #' @export
-PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highlights.cutoff=NULL, label.cutoff=1.1, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
+PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highlights.cutoff=NULL, label.cutoff=1.1, plot.baseline=TRUE, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
   plot <- ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=grandR::density2d(x=AUC,y=LFC, n = density.n)))+ggrastr::geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+cowplot::theme_cowplot()+
     geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)+geom_hline(yintercept = 0)+
@@ -31,6 +31,13 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
   if(length(highlights)!=0){
     plot <- plot + ggrastr::geom_point_rast(data=table[table$Gene%in%highlights & table$AUC > highlights.cutoff,],aes(x=AUC,y=LFC),color=highlights.color, scale=point.scale)
     plot <- plot + ggrepel::geom_label_repel(data=table[table$Gene%in%highlights & table$AUC > label.cutoff,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color)
+  }
+  if(plot.baseline){
+    if(is.na(table["baseline",]$Gene)){
+      warning("baseline info not in the table.")
+    } else {
+      plot <- plot + geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)
+    }
   }
   plot
 }
@@ -55,8 +62,8 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
 #' @param linetype Set the linetype of the p-value and estimate cutoff line.
 #' @return ggplot object
 #' @examples 
-#' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
-#' plot.doubleml(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
+#' res=HetseqDoubleML(data, trajectories, score.name = "score")
+#' PlotDoubleML(res, highlights=c("GAPDH", "MYC", "ISG15"))
 #' @export
 PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=NULL, highlight.p.cutoff=NULL, highlight.est.cutoff=NULL, label.p.cutoff=NULL, label.est.cutoff=NULL, label.repulsion = 1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
   plot<- ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=grandR::density2d(Estimate,-log10(p.adj), n=density.n)))+ggrastr::geom_point_rast(scale=point.scale)+

@@ -1,8 +1,15 @@
+#' @import ggplot2
+#' @import stats
+#' @import Seurat
+NULL
+#> NULL
+
+
+
 unregister_pp <- function() {
   env <- foreach:::.foreachGlobals
   rm(list=ls(name=env), pos=env)
 }
-
 
 
 #' Heterogeneity-seq wrapper
@@ -22,15 +29,19 @@ unregister_pp <- function() {
 #' @return Table of Heterogeneity-seq results.
 #' @examples 
 #' # Testing for differential gene expression: 
-#' group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=c("Low","Middle","High"))
-#' mat = t(as.matrix(FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")))[,trajectories[,1]]
+#' labels = c("Low","Middle","High")
+#' group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=labels)
+#' tab = FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")
+#' mat = t(as.matrix(tab))[,trajectories[,1]]
 #' hetseq(method="test", mat, group=="High",group=="Low")
 #' 
-#' # Using the Classifier to predict cellular outcomes by expression of single genes. Genes with strong predictive capabilities (high AUC) are candidate genes for pathway modulators.
-#' hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=posClass)
+#' # Using the Classifier to predict cellular outcomes by expression of single genes.
+#' # Genes with strong predictive capabilities (high AUC) are candidate genes for pathway modulators.
+#' hetseq(method="classify", data, trajectories, score.name = "score")
 #' 
-#' # Using a Classifier and Causal Inference (doubleML) to predict cellular outcomes by expression of single genes. Effect of genes on the outcome are estimated to distinguish genes with causal effects from correlating genes.
-#' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
+#' # Using a Classifier and Causal Inference (doubleML) to predict cellular outcomes by expression of single genes.
+#' # Effect of genes on the outcome are estimated to distinguish genes with causal effects from correlating genes.
+#' hetseq(method="doubleML", data, trajectories, score.name = "score")
 #' @export
 Hetseq = function(method=c("test", "classify", "doubleML"), ...){
     if (method == "test") {
@@ -52,16 +63,18 @@ Hetseq = function(method=c("test", "classify", "doubleML"), ...){
 #' @param B Vector of cells (columns) in negative class
 #' @return Table of log2FC, p-values and adjusted p-values of differentially expressed genes
 #' @examples 
-#' group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=c("Low","Middle","High"))
-#' mat = t(as.matrix(FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")))[,trajectories[,1]]
+#' labels = c("Low", "Middle", "High")
+#' group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=labels)
+#' tab = FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")
+#' mat = t(as.matrix(tab))[,trajectories[,1]]
 #' hetseq(method="test", mat, group=="High",group=="Low")
 #' 
 #' @export
 HetseqTest = function(mat,A,B) {
-  ps=sapply(1:nrow(mat),function(i) stats::wilcox.test(mat[i,A],mat[i,B])$p.value)
+  ps=sapply(1:nrow(mat),function(i) wilcox.test(mat[i,A],mat[i,B])$p.value)
   eff=sapply(1:nrow(mat),function(i) (log1p(mean(expm1(mat[i,A])))-log1p(mean(expm1(mat[i,B]))))/log(2))
   expr=sapply(1:nrow(mat),function(i) log1p(mean(expm1(mat[i,A|B]))))
-  re = data.frame(Expr=expr,LFC=eff,P=ps, Q = stats::p.adjust(ps,method="BH"))
+  re = data.frame(Expr=expr,LFC=eff,P=ps, Q = p.adjust(ps,method="BH"))
   rownames(re) = rownames(mat)
   re
 }
@@ -85,13 +98,21 @@ HetseqTest = function(mat,A,B) {
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @examples 
-#' hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
+#' # Using meta data in the Seurat object called "score" to automatically define response groups
+#' HetseqClassify(data, trajectories, score.name = "score")
+#' 
+#' # Use a manually defined grouping by handing a named vector to score.group.
+#' # data$infectionState contains the infection state of all cells and all time points. 
+#' # Get the infectionState of all cells from the last time point in the trajectories.
+#' groups <- data$infectionState[trajectories[,ncol(trajectories)],]
+#' # Adapt compareGroups to fit the low and high group names of the manual definition.
+#' HetseqClassify(data, trajectories, score.group = groups, compareGroups = c("Bystander", "High"))
 #' @export
 HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
-  library(parallel)
-  library(doParallel)
-  library(e1071)
-  library(pROC)
+  #library(parallel)
+  #library(doParallel)
+  #library(e1071)
+  #library(pROC)
   
   unregister_pp()
   
@@ -135,8 +156,8 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
   }
 
   # Register parallel backend
-  cl <- makeCluster(num_cores)
-  registerDoParallel(cl)
+  cl <- parallel::makeCluster(num_cores)
+  doParallel::registerDoParallel(cl)
   
   if(is.null(assay)){
     assay=DefaultAssay(object)
@@ -146,14 +167,14 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
   df_traj<-object@meta.data[train_idx,"Trajectory"]
   if(is.null(posClass)) posClass = names(table(df_traj))[2]
   y_numeric <- as.numeric(df_traj == posClass)
-  model <- svm(x = FetchData(object,cells=train_idx, vars=basefeatures), y = y_numeric, kernel = kernel, cross = cross)
+  model <- e1071::svm(x = FetchData(object,cells=train_idx, vars=basefeatures), y = y_numeric, kernel = kernel, cross = cross)
   predictions <- predict(model, newdata = FetchData(object, cells=test_idx, vars=basefeatures))
   df_traj<-object@meta.data[test_idx,]$Trajectory
   y_numeric <- as.numeric(df_traj == posClass)
-  auc_baseline=auc(roc(y_numeric, predictions))[[1]]
+  auc_baseline=pROC::auc(pROC::roc(y_numeric, predictions))[[1]]
   
   
-  improvements <- foreach(gene = genes, .combine = c) %dopar% {
+  improvements <- foreach::foreach(gene = genes, .combine = c) %dopar% {
     library(Seurat)
     library(caret)
     library(foreach)
@@ -180,7 +201,7 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
   }
   
   # Stop parallel backend
-  stopCluster(cl)
+  parallel::stopCluster(cl)
   unregister_pp()
   
   # Combine results
@@ -223,16 +244,24 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @examples 
-#' hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
+#' # Using meta data in the Seurat object called "score" to automatically define response groups
+#' HetseqDoubleML(data, trajectories, score.name = "score")
+#' 
+#' # Use a manually defined grouping by handing a named vector to score.group.
+#' # data$infectionState contains the infection state of all cells and all time points. 
+#' # Get the infectionState of all cells from the last time point in the trajectories.
+#' groups <- data$infectionState[trajectories[,ncol(trajectories)],]
+#' # Adapt compareGroups to fit the low and high group names of the manual definition.
+#' HetseqDoubleML(data, trajectories, score.group = groups, compareGroups = c("Bystander", "High"))
 #' @export
 HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
-  library(parallel)
-  library(doParallel)
-  library(e1071)
-  library(pROC)
-  library(DoubleML)
-  library(mlr3)
-  library(mlr3learners)
+  #library(parallel)
+  #library(doParallel)
+  #library(e1071)
+  #library(pROC)
+  #library(DoubleML)
+  #library(mlr3)
+  #library(mlr3learners)
   unregister_pp()
   
   if(!is.null(split) && (split > 1 | split < 0)) stop("split must be either NULL or in [0,1]")
@@ -275,8 +304,8 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
   }
   
   # Register parallel backend
-  cl <- makeCluster(num_cores)
-  registerDoParallel(cl)
+  cl <- parallel::makeCluster(num_cores)
+  doParallel::registerDoParallel(cl)
   
   if(is.null(assay)){
     assay=DefaultAssay(object)
@@ -294,7 +323,7 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
   
   renamed_genes <- colnames(data.frame(FetchData(object,cells=train_idx, vars=genes)))
   
-  improvements <- foreach(gene = renamed_genes, .combine = rbind) %dopar% {
+  improvements <- foreach::foreach(gene = renamed_genes, .combine = rbind) %dopar% {
     library(Seurat)
     library(caret)
     library(foreach)
@@ -329,7 +358,7 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
   print("Iterations done")
   
   # Stop parallel backend
-  stopCluster(cl)
+  parallel::stopCluster(cl)
   unregister_pp()
   
   # Combine results

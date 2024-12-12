@@ -15,6 +15,6 @@ prune(D.list, top.n = 10)
 Prune trajectories down to top.n candidates to reduce runtime of subsequent mincostflow function.
 }
 \examples{
+# For full trajectory generation, see example of distmat function.
 D.list = prune(D.list)
-For full trajectory generation, see example of distmat function.
 }

@@ -15,6 +15,6 @@ mincostflow(D.list, verbose = TRUE)
 Applies Min-Cost-Max-Flow to calculate optimal trajectories from distance matrices.
 }
 \examples{
+# For full trajectory generation, see example of distmat function.
 trajectories = mincostflow(D.list)
-For full trajectory generation, see example of distmat function.
 }

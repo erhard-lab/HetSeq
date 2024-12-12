@@ -60,6 +60,6 @@ ggplot object
 This plotting functions creates a Vulcano Plot to visualize DoubleML Results.
 }
 \examples{
-hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
-plot.doubleml(res, highlights=list(c("GAPDH", "MYC", "ISG15")))
+res=HetseqDoubleML(data, trajectories, score.name = "score")
+PlotDoubleML(res, highlights=c("GAPDH", "MYC", "ISG15"))
 }

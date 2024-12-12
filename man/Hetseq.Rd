@@ -28,13 +28,17 @@ Heterogeneity-seq uses intercellular heterogeneity to identify modulators of cel
 }
 \examples{
 # Testing for differential gene expression: 
-group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=c("Low","Middle","High"))
-mat = t(as.matrix(FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")))[,trajectories[,1]]
+labels = c("Low","Middle","High")
+group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=labels)
+tab = FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")
+mat = t(as.matrix(tab))[,trajectories[,1]]
 hetseq(method="test", mat, group=="High",group=="Low")
 
-# Using the Classifier to predict cellular outcomes by expression of single genes. Genes with strong predictive capabilities (high AUC) are candidate genes for pathway modulators.
-hetseq(method="classify", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=posClass)
+# Using the Classifier to predict cellular outcomes by expression of single genes.
+# Genes with strong predictive capabilities (high AUC) are candidate genes for pathway modulators.
+hetseq(method="classify", data, trajectories, score.name = "score")
 
-# Using a Classifier and Causal Inference (doubleML) to predict cellular outcomes by expression of single genes. Effect of genes on the outcome are estimated to distinguish genes with causal effects from correlating genes.
-hetseq(method="doubleML", data, trajectories, score.name = "score", quantiles = c(0.25,0.75), compareGroups = c("Low", "High"))
+# Using a Classifier and Causal Inference (doubleML) to predict cellular outcomes by expression of single genes.
+# Effect of genes on the outcome are estimated to distinguish genes with causal effects from correlating genes.
+hetseq(method="doubleML", data, trajectories, score.name = "score")
 }

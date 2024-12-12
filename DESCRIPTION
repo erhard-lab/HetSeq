@@ -3,12 +3,12 @@ Title: Identifying Modulators of Cellular Responses Leveraging
     Intercellular Heterogeneity
 Version: 0.1
 Authors@R: c(
-    person("Kevin", "Berg", , "Kevin.Bergl@informatik.uni-regensburg.de", role = c("aut", "cre")),
+    person("Kevin", "Berg", , "Kevin.Berg@informatik.uni-regensburg.de", role = c("aut", "cre")),
     person("Florian", "Erhard", , "Florian.Erhard@informatik.uni-regensburg.de", role = "aut",
            comment = c(ORCID = "0000-0002-3574-6983")),
     person("Lygeri", "Sakellaridi", , "Lygeri.Sakellaridi@informatik.uni-regensburg.de", role = "aut")
   )
-Author: Kevin Berg [aut, cre] Florian Erhard [aut]
+Author: Kevin Berg [aut, cre], Florian Erhard [aut]
     (<https://orcid.org/0000-0002-3574-6983>), Lygeri Sakellaridi [aut]
 Maintainer: Kevin Berg <Kevin.Berg@informatik.uni-regensburg.de>
 Description: Cellular responses to perturbations are highly heterogeneous
@@ -24,8 +24,7 @@ License: Apache License (>= 2)
 URL: https://github.com/erhard-lab/HetSeq
 BugReports: https://github.com/erhard-lab/HetSeq/issues
 Depends: 
-    R (>= 4.1.2),
-    ggplot2
+    R (>= 4.1.2)
 Imports: 
     caret,
     cowplot,
