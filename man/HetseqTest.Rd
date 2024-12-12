@@ -20,10 +20,6 @@ Table of log2FC, p-values and adjusted p-values of differentially expressed gene
 Testing for differential gene expression in predecessors of treated cells
 }
 \examples{
-labels = c("Low", "Middle", "High")
-group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=labels)
-tab = FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")
-mat = t(as.matrix(tab))[,trajectories[,1]]
-hetseq(method="test", mat, group=="High",group=="Low")
+HetseqTest(mat, group=="High",group=="Low")
 
 }

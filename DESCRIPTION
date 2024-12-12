@@ -24,9 +24,8 @@ License: Apache License (>= 2)
 URL: https://github.com/erhard-lab/HetSeq
 BugReports: https://github.com/erhard-lab/HetSeq/issues
 Depends: 
-    R (>= 4.1.2)
+    R (>= 4.1.0)
 Imports: 
-    caret,
     cowplot,
     doParallel,
     DoubleML,
@@ -39,7 +38,6 @@ Imports:
     igraph,
     lpSolve,
     mlr3,
-    mlr3learners,
     parallel,
     pROC,
     reshape2,

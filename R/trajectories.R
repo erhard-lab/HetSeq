@@ -10,7 +10,8 @@ library(lpSolve)
 #' @param gene_subset Set a subset of genes on which trajectories should be calculated. Other genes will be disregarded.
 #' @return Distance matrix between cells from two time points.
 #' @examples 
-#' treatment.list <- SplitObject(subset(data, subset = treatmentTime %in% c("0h", "2h")), split.by = "treatmentTime")
+#' treatment.list <- SplitObject(subset(data,
+#'   subset = treatmentTime %in% c("0h", "2h")), split.by = "treatmentTime")
 #' D.list=list(
 #'   distmat(treatment.list[["0h"]],treatment.list[["2h"]], "RNA", "prevRNA")
 #' )

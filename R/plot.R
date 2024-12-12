@@ -18,6 +18,7 @@
 #' PlotClassify(res, highlights=c("GAPDH", "MYC", "ISG15"))
 #' @export
 PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highlights.cutoff=NULL, label.cutoff=1.1, plot.baseline=TRUE, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
+  AUC<-LFC<-Gene<-NULL
   plot <- ggplot(table, aes(x=AUC, y=LFC,label=Gene, color=grandR::density2d(x=AUC,y=LFC, n = density.n)))+ggrastr::geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+cowplot::theme_cowplot()+
     geom_vline(xintercept = table["baseline",]$AUC, linetype=linetype)+geom_hline(yintercept = 0)+
@@ -66,6 +67,7 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, highligh
 #' PlotDoubleML(res, highlights=c("GAPDH", "MYC", "ISG15"))
 #' @export
 PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=NULL, highlight.p.cutoff=NULL, highlight.est.cutoff=NULL, label.p.cutoff=NULL, label.est.cutoff=NULL, label.repulsion = 1, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
+  Estimate<-p.adj<-Gene<-NULL
   plot<- ggplot(table, aes(x=Estimate, y=-log10(p.adj),color=grandR::density2d(Estimate,-log10(p.adj), n=density.n)))+ggrastr::geom_point_rast(scale=point.scale)+
     scale_color_viridis_c()+xlab(xlab)+ylab(ylab)+cowplot::theme_cowplot()+
     geom_hline(yintercept = -log10(p.cutoff), linetype=linetype)+
