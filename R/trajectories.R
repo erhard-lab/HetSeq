@@ -1,4 +1,6 @@
-library(lpSolve)
+#' @import lpSolve
+NULL
+#> NULL
 
 #' Calculate scSLAM-seq based distance matrices
 #'

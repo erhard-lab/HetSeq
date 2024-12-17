@@ -102,6 +102,8 @@ HetseqTest = function(mat,A,B) {
 #' @export
 HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
   gene <- Trajectory <- NULL
+  foreach::registerDoSEQ()
+  
   if(!is.null(split) && (split > 1 | split < 0)) stop("split must be either NULL or in [0,1]")
   
   if(is.null(score.group)){
@@ -236,6 +238,7 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @export
 HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
   Trajectory <- NULL
+  foreach::registerDoSEQ()
   
   if(!is.null(split) && (split > 1 | split < 0)) stop("split must be either NULL or in [0,1]")
   

@@ -8,9 +8,10 @@ PlotClassify(
   table,
   highlights = NULL,
   highlights.color = NULL,
-  highlights.cutoff = NULL,
-  label.cutoff = 1.1,
+  highlights.cutoff = 0,
+  label.cutoff = NULL,
   plot.baseline = TRUE,
+  density.color = TRUE,
   density.n = 500,
   point.scale = 0.5,
   xlab = "AUC",
@@ -30,6 +31,8 @@ PlotClassify(
 \item{label.cutoff}{Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.}
 
 \item{plot.baseline}{Inserts a vertical line at the baseline AUC value (= AUC of the classifier with basefeatures but no further gene info).}
+
+\item{density.color}{Color data points by density. Default is TRUE.}
 
 \item{density.n}{Set granularity of 2d density color.}
 

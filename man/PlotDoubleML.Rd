@@ -15,6 +15,7 @@ PlotDoubleML(
   label.p.cutoff = NULL,
   label.est.cutoff = NULL,
   label.repulsion = 1,
+  density.color = TRUE,
   density.n = 500,
   point.scale = 0.5,
   xlab = "Estimate",
@@ -42,6 +43,8 @@ PlotDoubleML(
 \item{label.est.cutoff}{Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.est.cutoff.}
 
 \item{label.repulsion}{Represents the force parameter of the ggrepel::geom_label_repel() function. Higher values reduce label overlap.}
+
+\item{density.color}{Color data points by density. Default is TRUE.}
 
 \item{density.n}{Set granularity of 2d density color.}
 
