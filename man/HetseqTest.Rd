@@ -19,7 +19,3 @@ Table of log2FC, p-values and adjusted p-values of differentially expressed gene
 \description{
 Testing for differential gene expression in predecessors of treated cells
 }
-\examples{
-HetseqTest(mat, group=="High",group=="Low")
-
-}

@@ -10,10 +10,6 @@ PlotDoubleML(
   p.cutoff = 0.05,
   est.cutoff = NULL,
   highlights.color = NULL,
-  highlight.p.cutoff = NULL,
-  highlight.est.cutoff = NULL,
-  label.p.cutoff = NULL,
-  label.est.cutoff = NULL,
   label.repulsion = 1,
   density.color = TRUE,
   density.n = 500,
@@ -34,14 +30,6 @@ PlotDoubleML(
 
 \item{highlights.color}{A vector of colors for gene highlights.}
 
-\item{highlight.p.cutoff}{Set a adjusted p-value cutoff below which genes will be highlighted. Defaults to the p.cutoff.}
-
-\item{highlight.est.cutoff}{Set an estimate cutoff above/below which genes will be highlighted. Defaults to 0.}
-
-\item{label.p.cutoff}{Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.p.cutoff.}
-
-\item{label.est.cutoff}{Set a cutoff at which gene highlights will be labeled. Defaults to the highlight.est.cutoff.}
-
 \item{label.repulsion}{Represents the force parameter of the ggrepel::geom_label_repel() function. Higher values reduce label overlap.}
 
 \item{density.color}{Color data points by density. Default is TRUE.}
@@ -61,8 +49,4 @@ ggplot object
 }
 \description{
 This plotting functions creates a Vulcano Plot to visualize DoubleML Results.
-}
-\examples{
-res=HetseqDoubleML(data, trajectories, score.name = "score")
-PlotDoubleML(res, highlights=c("GAPDH", "MYC", "ISG15"))
 }

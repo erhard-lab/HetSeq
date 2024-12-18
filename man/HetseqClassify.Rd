@@ -56,14 +56,3 @@ Table of log2FC and AUC values for each gene and an additional AUC value for the
 \description{
 Classifying the cellular response of control cells using single gene expression (+ informative features) to identify features with the strongest predictive capabilities.
 }
-\examples{
-# Using meta data in the Seurat object called "score" to automatically define response groups
-HetseqClassify(data, trajectories, score.name = "score")
-
-# Use a manually defined grouping by handing a named vector to score.group.
-# data$infectionState contains the infection state of all cells and all time points. 
-# Get the infectionState of all cells from the last time point in the trajectories.
-groups <- data$infectionState[trajectories[,ncol(trajectories)],]
-# Adapt compareGroups to fit the low and high group names of the manual definition.
-HetseqClassify(data, trajectories, score.group = groups, compareGroups = c("Bystander", "High"))
-}

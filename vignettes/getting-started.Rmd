@@ -34,7 +34,7 @@ library(ggplot2)
 library(ggrastr)
 library(cowplot)
 library(reshape2)
-data <- readRDS("../../zenodo/vignette/scifate_reduced.rds")
+data <- readRDS(url("https://zenodo.org/records/14514453/files/dex_data.rds"))
 ```
 
 
@@ -47,7 +47,7 @@ We can directly see that cells cluster differently according to the duration of 
 
 ```{r}
 
-gc_genes <- readRDS("../../zenodo/vignette/gc_genes.rds")
+gc_genes <- readRDS(url("https://zenodo.org/records/14514453/files/gc_genes.rds"))
 data$dex.percent <- AddModuleScore(data, list(dex.percent=intersect(rownames(data),gc_genes)), name = "DEX.modulescore", assay = "RNA")$DEX.modulescore1
 data$dex.percent.new <- AddModuleScore(data, list(dex.percent=intersect(rownames(data),gc_genes)), name = "DEX.modulescore.new", assay = "newRNA")$DEX.modulescore.new1
 
@@ -106,9 +106,20 @@ The classifier approach tries to predict either "Low" or "High" outcomes based o
 
 ```{r}
 
-res_classify <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", num_cores = 32)
+res_classify <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", num_cores = 16)
 PlotClassify(res_classify)
 
+
+# Using score.group to achieve the same results
+br1=quantile(data$dex.percent.new[trajectories$`2h`], probs = c(0.25))
+br2=quantile(data$dex.percent.new[trajectories$`2h`], probs = c(0.75))
+score.group = cut(data$dex.percent.new[trajectories$`2h`],breaks=c(-10,br1,br2,10),labels=c("Weak","Average","Strong"))
+
+
+# When using a score.group with different levels than the default (Low, Middle, High), compareGroups has to be adapted to which levels should be compared.
+# posClass can be set manually but will by default always be the second value in compareGroups.
+res_classify_grp <- HetseqClassify(data, trajectories, score.group = score.group, compareGroups = c("Weak", "Strong"), posClass = "Strong", num_cores = 16)
+all.equal(res_classify$AUC, res_classify_grp$AUC)
 ```
 The results of the classifier gives us an extensive list of genes and how well their expression can be used to predict the cell fate of control cells. Genes with high AUC values have strong predictive power and are therefore likely candidates for modulating the DEX pathway. Gene Ontology Analysis can give us a closer look at these genes and if there are any coherent functional relationships.
 
@@ -142,7 +153,7 @@ Among the negative modulators (LFC < 0), we see many genes connected to the cell
 
 ```{r}
 
-res_classify_cc <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 32)
+res_classify_cc <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 16)
 PlotClassify(res_classify_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.cutoff = 0.70, label.cutoff = 0.7)
 
 ```
@@ -154,6 +165,7 @@ While the classifier returns an extensive list of possible gene candidates, the 
 g_conf <- res_classify_cc[res_classify_cc$AUC>0.77,]$Gene
 
 res_doubleml_cc <- HetseqDoubleML(data, trajectories, score.name = "dex.percent.new", genes = g_conf, basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 32)
-PlotDoubleML(res_doubleml_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.color = rep("red", 5), density.color = FALSE)
+PlotDoubleML(res_doubleml_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.color = rep("red", 5), density.color = T)
+PlotDoubleML(res_doubleml_cc, density.color = F, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"))
 
 ```

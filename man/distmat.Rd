@@ -23,12 +23,3 @@ Distance matrix between cells from two time points.
 \description{
 This function calculates distances matrices between cells of different time points based on metabolic labeling RNA profiles.
 }
-\examples{
-treatment.list <- SplitObject(subset(data,
-  subset = treatmentTime \%in\% c("0h", "2h")), split.by = "treatmentTime")
-D.list=list(
-  distmat(treatment.list[["0h"]],treatment.list[["2h"]], "RNA", "prevRNA")
-)
-D.list = prune(D.list)
-trajectories = mincostflow(D.list)
-}

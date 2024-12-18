@@ -20,23 +20,6 @@ NULL
 #' @param method The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.doubleML.
 #' @param ... Parameters given to the chosen Hetseq method. See respective help pages.
 #' @return Table of Heterogeneity-seq results.
-#' @examples 
-#' # Testing for differential gene expression: 
-#' labels = c("Low","Middle","High")
-#' group = cut(data$score[trajectories[,ncol(trajectories)]],breaks=c(-10,0,5,10),labels=labels)
-#' tab = FetchData(data,vars = genes,cells = trajectories[,1],layer = "data")
-#' mat = t(as.matrix(tab))[,trajectories[,1]]
-#' hetseq(method="test", mat, group=="High",group=="Low")
-#' 
-#' # Using the Classifier to predict cellular outcomes
-#' # by expression of single genes. Genes with strong predictive
-#' # capabilities (high AUC) are candidate genes for pathway modulators.
-#' hetseq(method="classify", data, trajectories, score.name = "score")
-#' 
-#' # Using a Classifier and Causal Inference (doubleML) to predict cellular
-#' # outcomes by expression of single genes. Effect of genes on the outcome are
-#' # estimated to distinguish genes with causal effects from correlating genes.
-#' hetseq(method="doubleML", data, trajectories, score.name = "score")
 #' @export
 Hetseq = function(method=c("test", "classify", "doubleML"), ...){
     if (method == "test") {
@@ -57,9 +40,6 @@ Hetseq = function(method=c("test", "classify", "doubleML"), ...){
 #' @param A Vector of cells (columns) in positive class
 #' @param B Vector of cells (columns) in negative class
 #' @return Table of log2FC, p-values and adjusted p-values of differentially expressed genes
-#' @examples 
-#' HetseqTest(mat, group=="High",group=="Low")
-#' 
 #' @export
 HetseqTest = function(mat,A,B) {
   ps=sapply(1:nrow(mat),function(i) wilcox.test(mat[i,A],mat[i,B])$p.value)
@@ -88,16 +68,6 @@ HetseqTest = function(mat,A,B) {
 #' @param cross Number of cross-validations.
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
-#' @examples 
-#' # Using meta data in the Seurat object called "score" to automatically define response groups
-#' HetseqClassify(data, trajectories, score.name = "score")
-#' 
-#' # Use a manually defined grouping by handing a named vector to score.group.
-#' # data$infectionState contains the infection state of all cells and all time points. 
-#' # Get the infectionState of all cells from the last time point in the trajectories.
-#' groups <- data$infectionState[trajectories[,ncol(trajectories)],]
-#' # Adapt compareGroups to fit the low and high group names of the manual definition.
-#' HetseqClassify(data, trajectories, score.group = groups, compareGroups = c("Bystander", "High"))
 #' @importFrom foreach %dopar%
 #' @export
 HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
@@ -105,6 +75,7 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
   foreach::registerDoSEQ()
   
   if(!is.null(split) && (split > 1 | split < 0)) stop("split must be either NULL or in [0,1]")
+  if(length(compareGroups)!=2) stop("compareGroups has to be a vector with two character values.")
   
   if(is.null(score.group)){
     if(is.null(score.name)){
@@ -224,16 +195,6 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @param cross Number of cross-validations.
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
-#' @examples 
-#' # Using meta data in the Seurat object called "score" to automatically define response groups
-#' HetseqDoubleML(data, trajectories, score.name = "score")
-#' 
-#' # Use a manually defined grouping by handing a named vector to score.group.
-#' # data$infectionState contains the infection state of all cells and all time points. 
-#' # Get the infectionState of all cells from the last time point in the trajectories.
-#' groups <- data$infectionState[trajectories[,ncol(trajectories)],]
-#' # Adapt compareGroups to fit the low and high group names of the manual definition.
-#' HetseqDoubleML(data, trajectories, score.group = groups, compareGroups = c("Bystander", "High"))
 #' @importFrom foreach %dopar%
 #' @export
 HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
@@ -241,6 +202,7 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
   foreach::registerDoSEQ()
   
   if(!is.null(split) && (split > 1 | split < 0)) stop("split must be either NULL or in [0,1]")
+  if(length(compareGroups)!=2) stop("compareGroups has to be a vector with two character values.")
   
   if(is.null(score.group)){
     if(is.null(score.name)){

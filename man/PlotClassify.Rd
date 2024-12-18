@@ -8,8 +8,7 @@ PlotClassify(
   table,
   highlights = NULL,
   highlights.color = NULL,
-  highlights.cutoff = 0,
-  label.cutoff = NULL,
+  auc.cutoff = NULL,
   plot.baseline = TRUE,
   density.color = TRUE,
   density.n = 500,
@@ -26,9 +25,7 @@ PlotClassify(
 
 \item{highlights.color}{A vector of colors for gene highlights.}
 
-\item{highlights.cutoff}{Set a cutoff at which gene highlights should be set.}
-
-\item{label.cutoff}{Set a cutoff at which gene highlights will be labeled. Values > 1 will lead to no genes being labeled.}
+\item{auc.cutoff}{Inserts a vertical line at the cutoff AUC value.}
 
 \item{plot.baseline}{Inserts a vertical line at the baseline AUC value (= AUC of the classifier with basefeatures but no further gene info).}
 
@@ -49,8 +46,4 @@ ggplot object
 }
 \description{
 This plotting functions creates AUC Scatter plots to visualize Classifier Results.
-}
-\examples{
-res=HetseqClassify(data, trajectories, score.name = "score")
-PlotClassify(res, highlights=c("GAPDH", "MYC", "ISG15"))
 }
