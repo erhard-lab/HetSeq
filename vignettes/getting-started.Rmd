@@ -154,7 +154,7 @@ Among the negative modulators (LFC < 0), we see many genes connected to the cell
 ```{r}
 
 res_classify_cc <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 16)
-PlotClassify(res_classify_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.cutoff = 0.70, label.cutoff = 0.7)
+PlotClassify(res_classify_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"))
 
 ```
 This new analysis now shows a set of genes whose AUC was calculated including the cell cycle information. Among many newly identified factors, we find several genes like [[ZFP36L1]](https://doi.org/10.1101/2022.09.27.509553), [[TRAM1]](https://doi.org/10.1210/endo.141.9.7680) and [[ACTN4]](https://www.jbc.org/article/S0021-9258(20)36696-5/fulltext), who are known positive modulators as well as [[SRGN]](https://doi.org/10.3389/fonc.2013.00327 ) and [[G6PD]](https://doi.org/10.1186/s40164-022-00326-6) who are involved in a range of drug resistances.
@@ -165,7 +165,5 @@ While the classifier returns an extensive list of possible gene candidates, the 
 g_conf <- res_classify_cc[res_classify_cc$AUC>0.77,]$Gene
 
 res_doubleml_cc <- HetseqDoubleML(data, trajectories, score.name = "dex.percent.new", genes = g_conf, basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 32)
-PlotDoubleML(res_doubleml_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.color = rep("red", 5), density.color = T)
-PlotDoubleML(res_doubleml_cc, density.color = F, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"))
-
+PlotDoubleML(res_doubleml_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"), highlights.color = rep("red", 5), density.color = FALSE)
 ```

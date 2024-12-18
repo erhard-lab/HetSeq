@@ -37,6 +37,11 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, auc.cuto
   }
   
   if(length(highlights)!=0){
+    missing <- setdiff(highlights, table$Gene)
+    if(length(missing)>0){
+      warning(paste0("The following elements were not found in the table:" ), missing)
+      highlights.color <- highlights.color[1:length(highlights)-length(missing)]
+    }
     plot <- plot + ggrastr::geom_point_rast(data=table[table$Gene%in%highlights,],aes(x=AUC,y=LFC),color=highlights.color, scale=point.scale)
     plot <- plot + ggrepel::geom_label_repel(data=table[table$Gene%in%highlights,], aes(x=AUC,y=LFC,label=Gene),color=highlights.color)
   }
@@ -87,12 +92,20 @@ PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NUL
   }
 
   if(!is.null(est.cutoff)){
-    plot<-plot+geom_vline(c(-est.cutoff,est.cutoff), linetype=linetype)
+    plot<-plot+geom_vline(xintercept = c(-est.cutoff,est.cutoff), linetype=linetype)
   }
   if(!is.null(p.cutoff)){
-    plot<-plot+geom_hline(-log10(p.cutoff), linetype=linetype)
+    plot<-plot+geom_hline(yintercept = -log10(p.cutoff), linetype=linetype)
   }
+  
+  
+  
   if(length(highlights)!=0){
+    missing <- setdiff(highlights, table$Gene)
+    if(length(missing)>0){
+      warning(paste0("The following elements were not found in the table:" ), missing)
+      highlights.color <- highlights.color[1:length(highlights)-length(missing)]
+    }
     plot <- plot + ggrastr::geom_point_rast(data=table[table$Gene%in%highlights,],aes(x=Estimate,y=-log10(p.adj)),color=highlights.color, scale=point.scale)
     plot <- plot + ggrepel::geom_label_repel(data=table[table$Gene%in%highlights,], aes(x=Estimate,y=-log10(p.adj),label=Gene),color=highlights.color, force = label.repulsion)
   }
