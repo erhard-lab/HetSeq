@@ -75,12 +75,10 @@ HetseqTest = function(mat,A,B) {
 #' @importFrom foreach %dopar%
 #' @examples
 #' \dontrun{
-#'   # Using meta.data column "score" of the seurat object to automatically define score.groups
-#'   tab <- HetseqClassify(data, trajectories, score.name = "score")
+#'   t <- HetseqClassify(data, trajectories, score.name = "score")
 #'   
-#'   # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
-#'   tab <- HetseqClassify(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
-
+#'   t <- HetseqClassify(data, trajectories, score.group = groups,
+#'           compareGroups = c("Weak", "Strong"))
 #' }
 #' @export
 HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
@@ -210,12 +208,10 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @importFrom foreach %dopar%
 #' @examples
 #' \dontrun{
-#'   # Using meta.data column "score" of the seurat object to automatically define score.groups
-#'   tab <- HetseqDoubleML(data, trajectories, score.name = "score")
+#'   t <- HetseqDoubleML(data, trajectories, score.name = "score")
 #'   
-#'   # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
-#'   tab <- HetseqDoubleML(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
-
+#'   t <- HetseqDoubleML(data, trajectories, score.group = group_vector,
+#'         compareGroups = c("Weak", "Strong"))
 #' }
 #' @export
 HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, cross=10, num_cores=1){

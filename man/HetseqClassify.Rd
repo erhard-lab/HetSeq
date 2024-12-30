@@ -58,10 +58,9 @@ Classifying the cellular response of control cells using single gene expression 
 }
 \examples{
 \dontrun{
-  # Using meta.data column "score" of the seurat object to automatically define score.groups
-  tab <- HetseqClassify(data, trajectories, score.name = "score")
+  t <- HetseqClassify(data, trajectories, score.name = "score")
   
-  # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
-  tab <- HetseqClassify(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
+  t <- HetseqClassify(data, trajectories, score.group = groups,
+          compareGroups = c("Weak", "Strong"))
 }
 }
