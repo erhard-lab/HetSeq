@@ -19,6 +19,10 @@ NULL
 #' 
 #' @param method The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.doubleML.
 #' @param ... Parameters given to the chosen Hetseq method. See respective help pages.
+#' @examples
+#' \dontrun{
+#'   tab <- Hetseq(method="classify", data, trajectories, score.name = "score")
+#' }
 #' @return Table of Heterogeneity-seq results.
 #' @export
 Hetseq = function(method=c("test", "classify", "doubleML"), ...){
@@ -69,6 +73,15 @@ HetseqTest = function(mat,A,B) {
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
+#' @examples
+#' \dontrun{
+#'   # Using meta.data column "score" of the seurat object to automatically define score.groups
+#'   tab <- HetseqClassify(data, trajectories, score.name = "score")
+#'   
+#'   # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
+#'   tab <- HetseqClassify(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
+
+#' }
 #' @export
 HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, assay=NULL, split=NULL, kernel="radial",  cross=10, num_cores = 1){
   gene <- Trajectory <- NULL
@@ -191,13 +204,21 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @param genes Vector of genes to test.
 #' @param assay The name of the Seurat assay to perform Heterogeneity-seq on. If NULL, the default assay will be used.
 #' @param split Set a training-test data split. Must be in [0,1]
-#' @param kernel The kernel for the SVM. linear, polynomial, radial or sigmoid. Default: radial. 
 #' @param cross Number of cross-validations.
 #' @param num_cores The number of cores used in parallel processing.
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
+#' @examples
+#' \dontrun{
+#'   # Using meta.data column "score" of the seurat object to automatically define score.groups
+#'   tab <- HetseqDoubleML(data, trajectories, score.name = "score")
+#'   
+#'   # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
+#'   tab <- HetseqDoubleML(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
+
+#' }
 #' @export
-HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, kernel="radial", cross=10, num_cores=1){
+HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=NULL,  quantiles = c(0.25,0.75), compareGroups = c("Low", "High"), posClass=NULL, basefeatures=NULL, genes=NULL, background=NULL, assay=NULL, split=NULL, cross=10, num_cores=1){
   Trajectory <- NULL
   foreach::registerDoSEQ()
   

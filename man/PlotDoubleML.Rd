@@ -50,3 +50,9 @@ ggplot object
 \description{
 This plotting functions creates a Vulcano Plot to visualize DoubleML Results.
 }
+\examples{
+\dontrun{
+  tab <- HetseqDoubleML(data, trajectories, score.name = "score")
+  PlotDoubleML(tab, highlights=c("MYC", "GAPDH", "ISG15"))
+}
+}

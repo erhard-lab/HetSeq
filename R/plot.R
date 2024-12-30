@@ -13,6 +13,11 @@
 #' @param ylab Set label of the y-axis.
 #' @param linetype Set the linetype of the baseline AUC line.
 #' @return ggplot object
+#' @examples
+#' \dontrun{
+#'   tab <- HetseqClassify(data, trajectories, score.name = "score")
+#'   PlotClassify(tab, highlights=c("MYC", "GAPDH", "ISG15"))
+#' }
 #' @export
 PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, auc.cutoff = NULL, plot.baseline=TRUE, density.color = TRUE, density.n=500, point.scale=0.5, xlab="AUC", ylab=bquote(log[2]~FC~(`0h`)), linetype="dashed"){
   AUC<-LFC<-Gene<-NULL
@@ -71,6 +76,11 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, auc.cuto
 #' @param ylab Set label of the y-axis.
 #' @param linetype Set the linetype of the p-value and estimate cutoff line.
 #' @return ggplot object
+#' @examples
+#' \dontrun{
+#'   tab <- HetseqDoubleML(data, trajectories, score.name = "score")
+#'   PlotDoubleML(tab, highlights=c("MYC", "GAPDH", "ISG15"))
+#' }
 #' @export
 PlotDoubleML <- function(table, highlights=NULL, p.cutoff = 0.05, est.cutoff=NULL, highlights.color=NULL, label.repulsion = 1, density.color=TRUE, density.n=500, point.scale=0.5, xlab="Estimate", ylab=bquote("-" ~ log[10] ~ FDR), linetype="dashed"){
   Estimate<-p.adj<-Gene<-NULL

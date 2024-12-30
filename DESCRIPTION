@@ -45,4 +45,5 @@ Imports:
     Seurat,
     stats
 Encoding: UTF-8
+VignetteBuilder: knitr
 RoxygenNote: 7.2.3

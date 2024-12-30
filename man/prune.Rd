@@ -14,3 +14,8 @@ prune(D.list, top.n = 10)
 \description{
 Prune trajectories down to top.n candidates to reduce runtime of subsequent mincostflow function.
 }
+\examples{
+\dontrun{
+  prune(D.list, top.n = 10)
+}
+}

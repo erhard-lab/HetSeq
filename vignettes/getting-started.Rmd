@@ -6,8 +6,6 @@ output:
   rmarkdown::html_vignette:
     toc: true
     df_print: kable
-    fig_width: 7
-    fig_height: 6
 
 vignette: >
   %\VignetteIndexEntry{Getting started}
@@ -21,19 +19,22 @@ knitr::opts_chunk$set(echo = TRUE,comment=NA,R.options=list(width = 95))
 ```
 
 
-This vignette will show you the major steps and the workflow of Heterogeneity-seq. This will include calculation of previous RNA profiles, trajectory generation and applying two Heterogeneity-seq methods.
+This vignette will show you the major steps and the workflow of Heterogeneity-seq. This will include trajectory generation and applying two Heterogeneity-seq methods.
 
 The data we use here is originally from [[Cao et al., 2020]](https://pubmed.ncbi.nlm.nih.gov/32284584/) and was reanalyzed in our [[Heterogeneity-seq paper]](https://www.biorxiv.org/content/10.1101/2024.10.28.620481v1). It is a scSLAM-seq time course data set of cells treated with the glucocorticoid Dexamethasone (DEX) for 10 hours with 2h labeling intervals. 
 
-First, we load in the HetSeq package as well as the preprocessed Seurat object:
+First, we load in the HetSeq package alongside other useful packages well as the preprocessed Seurat object:
 
 ```{r}
+suppressMessages({
 library(HetSeq)
 library(Seurat)
 library(ggplot2)
 library(ggrastr)
 library(cowplot)
 library(reshape2)
+})
+
 data <- readRDS(url("https://zenodo.org/records/14514453/files/dex_data.rds"))
 ```
 
@@ -124,9 +125,10 @@ all.equal(res_classify$AUC, res_classify_grp$AUC)
 The results of the classifier gives us an extensive list of genes and how well their expression can be used to predict the cell fate of control cells. Genes with high AUC values have strong predictive power and are therefore likely candidates for modulating the DEX pathway. Gene Ontology Analysis can give us a closer look at these genes and if there are any coherent functional relationships.
 
 ```{r}
-
-library(clusterProfiler)
-library(org.Hs.eg.db)
+suppressMessages({
+  library(clusterProfiler)
+  library(org.Hs.eg.db)
+})
 
 ego_down <- enrichGO(gene         = res_classify[res_classify$AUC>0.65 & res_classify$LFC<0,]$Gene,
                   OrgDb         = org.Hs.eg.db,

@@ -17,7 +17,6 @@ HetseqDoubleML(
   background = NULL,
   assay = NULL,
   split = NULL,
-  kernel = "radial",
   cross = 10,
   num_cores = 1
 )
@@ -47,8 +46,6 @@ HetseqDoubleML(
 
 \item{split}{Set a training-test data split. Must be in [0,1]}
 
-\item{kernel}{The kernel for the SVM. linear, polynomial, radial or sigmoid. Default: radial.}
-
 \item{cross}{Number of cross-validations.}
 
 \item{num_cores}{The number of cores used in parallel processing.}
@@ -58,4 +55,13 @@ Table of log2FC and AUC values for each gene and an additional AUC value for the
 }
 \description{
 Classifying the cellular response of control cells using single gene expression (+ informative features) to identify features with the strongest predictive capabilities and applying causal inference by a doubleML approach.
+}
+\examples{
+\dontrun{
+  # Using meta.data column "score" of the seurat object to automatically define score.groups
+  tab <- HetseqDoubleML(data, trajectories, score.name = "score")
+  
+  # Use a vector of manually defined response groups. If the levels of response groups do not contain "Low" and "High" levels, adapt compareGroups parameter accordingly.
+  tab <- HetseqDoubleML(data, trajectories, score.group = group_vector, compareGroups = c("Weak", "Strong"))
+}
 }
