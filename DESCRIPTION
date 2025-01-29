@@ -1,7 +1,7 @@
 Package: HetSeq
 Title: Identifying Modulators of Cellular Responses Leveraging
     Intercellular Heterogeneity
-Version: 0.1
+Version: 0.1.0
 Authors@R: c(
     person("Kevin", "Berg", , "Kevin.Berg@informatik.uni-regensburg.de", role = c("aut", "cre")),
     person("Florian", "Erhard", , "Florian.Erhard@informatik.uni-regensburg.de", role = "aut",
@@ -28,8 +28,10 @@ Depends:
 Imports: 
     cowplot,
     doParallel,
+    foreach,
     DoubleML,
     e1071,
+    igraph,
     ggplot2,
     ggrastr,
     ggrepel,

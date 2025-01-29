@@ -2,7 +2,7 @@
 % Please edit documentation in R/hetseq.R
 \name{HetseqDoubleML}
 \alias{HetseqDoubleML}
-\title{Heterogeneity-seq: Classifying cellular response by gene expression values including causal inference by doubleML}
+\title{Heterogeneity-seq: Classifying cellular response by gene expression values including causal inference by DoubleML}
 \usage{
 HetseqDoubleML(
   object,
@@ -40,7 +40,7 @@ HetseqDoubleML(
 
 \item{genes}{Vector of genes to test.}
 
-\item{background}{A set of genes that will be considered as potential confounding factors in the doubleML analysis. Must contain all genes set in the genes parameter. By default, all genes are used.}
+\item{background}{A set of genes that will be considered as potential confounding factors in the DoubleML analysis. Must contain all genes set in the genes parameter. By default, all genes are used.}
 
 \item{assay}{The name of the Seurat assay to perform Heterogeneity-seq on. If NULL, the default assay will be used.}
 
@@ -54,7 +54,7 @@ HetseqDoubleML(
 Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 }
 \description{
-Classifying the cellular response of control cells using single gene expression (+ informative features) to identify features with the strongest predictive capabilities and applying causal inference by a doubleML approach.
+Classifying the cellular response of control cells using single gene expression (+ informative features) to identify features with the strongest predictive capabilities and applying causal inference by a DoubleML approach.
 }
 \examples{
 \dontrun{

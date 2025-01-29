@@ -4,10 +4,10 @@
 \alias{Hetseq}
 \title{Heterogeneity-seq wrapper}
 \usage{
-Hetseq(method = c("test", "classify", "doubleML"), ...)
+Hetseq(method = c("test", "classify", "DoubleML"), ...)
 }
 \arguments{
-\item{method}{The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.doubleML.}
+\item{method}{The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.DoubleML.}
 
 \item{...}{Parameters given to the chosen Hetseq method. See respective help pages.}
 }
@@ -24,7 +24,7 @@ Heterogeneity-seq uses intercellular heterogeneity to identify modulators of cel
 
 - classify: Predicting cellular outcome by expression of single genes (+informative features) reveals genes with strong predictive capabilities (high AUC) as potential pathway modulators.
 
-- doubleML: A strict predictor that utilizes Causal Inference (doubleML) to distinguish causal factors from simply correlating genes. Genes with high estimated effects on the outcome and high significance are identified as potential pathway modulators.
+- DoubleML: A strict predictor that utilizes Causal Inference (DoubleML) to distinguish causal factors from simply correlating genes. Genes with high estimated effects on the outcome and high significance are identified as potential pathway modulators.
 }
 \examples{
 \dontrun{
