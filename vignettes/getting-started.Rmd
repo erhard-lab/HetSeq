@@ -23,7 +23,7 @@ This vignette will show you the major steps and the workflow of Heterogeneity-se
 
 The data we use here is originally from [[Cao et al., 2020]](https://pubmed.ncbi.nlm.nih.gov/32284584/) and was reanalyzed in our [[Heterogeneity-seq paper]](https://www.biorxiv.org/content/10.1101/2024.10.28.620481v1). It is a scSLAM-seq time course data set of cells treated with the glucocorticoid Dexamethasone (DEX) for 10 hours with 2h labeling intervals. 
 
-First, we load in the HetSeq package alongside other useful packages well as the preprocessed Seurat object:
+First, we load in the HetSeq package alongside other useful packages as well as the preprocessed Seurat object:
 
 ```{r}
 suppressMessages({
@@ -33,6 +33,7 @@ library(ggplot2)
 library(ggrastr)
 library(cowplot)
 library(reshape2)
+options(timeout = 120)
 })
 
 data <- readRDS(url("https://zenodo.org/records/14514453/files/dex_data.rds"))
@@ -41,12 +42,13 @@ data <- readRDS(url("https://zenodo.org/records/14514453/files/dex_data.rds"))
 
 Let's have a look at the data:
 
-```{r}
+```{r, fig.width=4}
 DimPlot(data, group.by="treatmentTime")
 ```
+
 We can directly see that cells cluster differently according to the duration of DEX treatment. However, to investigate the expression strength of DEX response genes, we calculate a module score for each cell, using a list of DEX response genes used in the original study:
 
-```{r}
+```{r, fig.width=4}
 
 gc_genes <- readRDS(url("https://zenodo.org/records/14514453/files/gc_genes.rds"))
 data$dex.percent <- AddModuleScore(data, list(dex.percent=intersect(rownames(data),gc_genes)), name = "DEX.modulescore", assay = "RNA")$DEX.modulescore1
@@ -56,12 +58,15 @@ df=as.data.frame(data@reductions$umap@cell.embeddings)
 df$Condition=data$treatmentTime
 df$dex.percent.new = data$dex.percent.new
 ggplot(df, aes(x=umap_1,y=umap_2,color=dex.percent.new))+geom_point(size=0.2)+scale_color_viridis_c(option = "turbo", name="DEX score", limits=c(0,0.8), oob=scales::squish)+theme_cowplot()
+```
 
+```{r, fig.width=5}
 tab <- FetchData(data, c("treatmentTime", "dex.percent", "dex.percent.new"))
 tab_melt <- melt(tab)
 ggplot(tab_melt, aes(x=treatmentTime, y=value,color=variable))+geom_boxplot()+theme_cowplot()+theme(axis.title.x = element_blank())+
   scale_color_manual(values = c("#298c8c", "#800074"),labels = c("total RNA", "new RNA"))+ylab("DEX score")
 ```
+
 We can now see a strongly heterogeneous DEX response in cells from the same sample, both in total and in new RNA levels. These differences are likely based on intercellular heterogeneity at the start of DEX treatment and Heterogeneity-seq can leverage this information to identify the factors in old (or previous) RNA, which drive these outcomes. But first, we need to connect cells from an end point with distinguishable weak and strong responder cells back to control cells (0h). Theoretically, we could just use the last time point (10h) as the end point and the specific choice depends on the underlying biological pathway and the question asked. Here are two examples:
 
   1. Which factors drive a strong/quick initial response to DEX?
@@ -71,7 +76,7 @@ If we look at the box plots of the DEX score in both new and total RNA, we see a
 
 Let's stick with the first question. To answer it, we need to first create trajectories from cells in the 2h time point back to their most likely predecessor in the control (0h) sample:
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 
 # Splitting the Seurat object into a list for convenience
 treatment.list <- SplitObject(subset(data, subset = treatmentTime %in% c("0h", "2h")), split.by = "treatmentTime")
@@ -105,7 +110,7 @@ With the trajectories generated, we can now call one of the Heterogeneity-seq ap
 
 The classifier approach tries to predict either "Low" or "High" outcomes based on the expression of single genes at a time. Most genes will not be informative enough to result in high AUC values, but those that have high AUCs are likely candidate genes.  
 
-```{r}
+```{r, message=FALSE, warning=FALSE, fig.width=5}
 
 res_classify <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", num_cores = 16)
 PlotClassify(res_classify)
@@ -122,9 +127,10 @@ score.group = cut(data$dex.percent.new[trajectories$`2h`],breaks=c(-10,br1,br2,1
 res_classify_grp <- HetseqClassify(data, trajectories, score.group = score.group, compareGroups = c("Weak", "Strong"), posClass = "Strong", num_cores = 16)
 all.equal(res_classify$AUC, res_classify_grp$AUC)
 ```
+
 The results of the classifier gives us an extensive list of genes and how well their expression can be used to predict the cell fate of control cells. Genes with high AUC values have strong predictive power and are therefore likely candidates for modulating the DEX pathway. Gene Ontology Analysis can give us a closer look at these genes and if there are any coherent functional relationships.
 
-```{r}
+```{r, message=FALSE, warning=FALSE, fig.width=5.5, fig.height=4.5}
 suppressMessages({
   library(clusterProfiler)
   library(org.Hs.eg.db)
@@ -153,17 +159,18 @@ barplot(ego_up)
 
 Among the negative modulators (LFC < 0), we see many genes connected to the cell cycle, which fits nicely with a [[paper]](https://doi.org/10.1621/nrs.14001) reporting weaker responses to DEX during the S phase. As this effect seems to dominate the negative modulators, it might be sensible to remove the cell cycle effect from the classification results. This can be done by specifying the basefeatures parameter of the Hetseq functions. This parameter can take a vector of metadata column or gene names and will include this information in the prediction for every gene. The seurat object contains two meta data columns called cc_umap1 and cc_umap2. These are the first and second umap coordinates of a UMAP based solely on cell cycle genes. For the purpose of this demonstration, we skip this UMAP calculation (if you are interested, check the original code for our paper [[here]](https://zenodo.org/records/14176698)).
 
-```{r}
+```{r, message=FALSE, warning=FALSE, fig.width=5}
 
 res_classify_cc <- HetseqClassify(data, trajectories, score.name = "dex.percent.new", basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 16)
 PlotClassify(res_classify_cc, highlights=c("ZFP36L1", "TRAM1", "ACTN4", "SRGN", "G6PD"))
 
 ```
-This new analysis now shows a set of genes whose AUC was calculated including the cell cycle information. Among many newly identified factors, we find several genes like [[ZFP36L1]](https://doi.org/10.1101/2022.09.27.509553), [[TRAM1]](https://doi.org/10.1210/endo.141.9.7680) and [[ACTN4]](https://www.jbc.org/article/S0021-9258(20)36696-5/fulltext), who are known positive modulators as well as [[SRGN]](https://doi.org/10.3389/fonc.2013.00327 ) and [[G6PD]](https://doi.org/10.1186/s40164-022-00326-6) who are involved in a range of drug resistances.
+
+This new analysis now shows a set of genes whose AUC was calculated including the cell cycle information. Among many newly identified factors, we find several genes like [[ZFP36L1]](https://doi.org/10.1101/2022.09.27.509553), [[TRAM1]](https://doi.org/10.1210/endo.141.9.7680) and [[ACTN4]](https://www.jbc.org/article/S0021-9258(20)36696-5/fulltext), who are known positive modulators as well as [[SRGN]](https://doi.org/10.3389/fonc.2013.00327 ) and [[G6PD]](https://doi.org/10.1186/s40164-022-00326-6) who are involved in a range of drug resistances and DEX resistance, respectively.
 
 While the classifier returns an extensive list of possible gene candidates, the DoubleML approach uses Causal Inference to identify truly causal factors and estimates their effect on the outcome. This approach is inherently more strict and runs for a significantly longer time. We strongly encourage to increase the number of cores or only use the DoubleML approach to confirm a limited set of genes. For the purpose of this vignette, we only run the DoubleML approach on 200 genes.
 
-```{r}
+```{r, message=FALSE, warning=FALSE, fig.width=4.5,  fig.height=4.5}
 g_conf <- res_classify_cc[res_classify_cc$AUC>0.77,]$Gene
 
 res_doubleml_cc <- HetseqDoubleML(data, trajectories, score.name = "dex.percent.new", genes = g_conf, basefeatures = c("cc_umap1", "cc_umap2"), num_cores = 32)

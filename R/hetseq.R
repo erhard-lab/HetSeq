@@ -21,6 +21,9 @@ NULL
 #' @param ... Parameters given to the chosen Hetseq method. See respective help pages.
 #' @examples
 #' \dontrun{
+#' 
+#' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+#' 
 #'   tab <- Hetseq(method="classify", data, trajectories, score.name = "score")
 #' }
 #' @return Table of Heterogeneity-seq results.
@@ -75,6 +78,9 @@ HetseqTest = function(mat,A,B) {
 #' @importFrom foreach %dopar%
 #' @examples
 #' \dontrun{
+#' 
+#' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+#' 
 #'   t <- HetseqClassify(data, trajectories, score.name = "score")
 #'   
 #'   t <- HetseqClassify(data, trajectories, score.group = groups,
@@ -208,6 +214,9 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @importFrom foreach %dopar%
 #' @examples
 #' \dontrun{
+#' 
+#' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+#' 
 #'   t <- HetseqDoubleML(data, trajectories, score.name = "score")
 #'   
 #'   t <- HetseqDoubleML(data, trajectories, score.group = group_vector,

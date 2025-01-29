@@ -28,6 +28,9 @@ Heterogeneity-seq uses intercellular heterogeneity to identify modulators of cel
 }
 \examples{
 \dontrun{
+
+# Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+
   tab <- Hetseq(method="classify", data, trajectories, score.name = "score")
 }
 }

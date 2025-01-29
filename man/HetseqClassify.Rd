@@ -58,6 +58,9 @@ Classifying the cellular response of control cells using single gene expression 
 }
 \examples{
 \dontrun{
+
+# Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+
   t <- HetseqClassify(data, trajectories, score.name = "score")
   
   t <- HetseqClassify(data, trajectories, score.group = groups,
