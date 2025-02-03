@@ -12,9 +12,9 @@
 #' @param xlab Set label of the x-axis.
 #' @param ylab Set label of the y-axis.
 #' @param linetype Set the linetype of the baseline AUC line.
-#' @return ggplot object
+#' @return ggplot object.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   tab <- HetseqClassify(data, trajectories, score.name = "score")
 #'   PlotClassify(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 #' }
@@ -75,9 +75,9 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, auc.cuto
 #' @param xlab Set label of the x-axis.
 #' @param ylab Set label of the y-axis.
 #' @param linetype Set the linetype of the p-value and estimate cutoff line.
-#' @return ggplot object
+#' @return ggplot object.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   tab <- HetseqDoubleML(data, trajectories, score.name = "score")
 #'   PlotDoubleML(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 #' }

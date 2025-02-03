@@ -42,13 +42,13 @@ PlotClassify(
 \item{linetype}{Set the linetype of the baseline AUC line.}
 }
 \value{
-ggplot object
+ggplot object.
 }
 \description{
 This plotting functions creates AUC Scatter plots to visualize Classifier Results.
 }
 \examples{
-\dontrun{
+\donttest{
   tab <- HetseqClassify(data, trajectories, score.name = "score")
   PlotClassify(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 }

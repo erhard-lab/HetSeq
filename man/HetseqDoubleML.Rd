@@ -57,7 +57,7 @@ Table of log2FC and AUC values for each gene and an additional AUC value for the
 Classifying the cellular response of control cells using single gene expression (+ informative features) to identify features with the strongest predictive capabilities and applying causal inference by a DoubleML approach.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 

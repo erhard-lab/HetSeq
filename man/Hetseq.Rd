@@ -27,7 +27,7 @@ Heterogeneity-seq uses intercellular heterogeneity to identify modulators of cel
 - DoubleML: A strict predictor that utilizes Causal Inference (DoubleML) to distinguish causal factors from simply correlating genes. Genes with high estimated effects on the outcome and high significance are identified as potential pathway modulators.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 

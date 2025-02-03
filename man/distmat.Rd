@@ -24,7 +24,10 @@ Distance matrix between cells from two time points.
 This function calculates distances matrices between cells of different time points based on metabolic labeling RNA profiles.
 }
 \examples{
-\dontrun{
+\donttest{
+
+# Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+
   obj.list <- SplitObject(seuratObject, split.by = "time")
   D.list=list(
    distmat(treatment.list[["0h"]],treatment.list[["2h"]], "RNA", "prevRNA"),

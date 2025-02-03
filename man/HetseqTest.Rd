@@ -14,7 +14,7 @@ HetseqTest(mat, A, B)
 \item{B}{Vector of cells (columns) in negative class}
 }
 \value{
-Table of log2FC, p-values and adjusted p-values of differentially expressed genes
+Table of log2FC, p-values and adjusted p-values of differentially expressed genes.
 }
 \description{
 Testing for differential gene expression in predecessors of treated cells

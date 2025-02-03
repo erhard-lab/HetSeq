@@ -11,11 +11,17 @@ mincostflow(D.list, verbose = TRUE)
 
 \item{verbose}{Show verbose output.}
 }
+\value{
+Matrix of cell-cell trajectories spanning all given timepoints.
+}
 \description{
 Applies Min-Cost-Max-Flow to calculate optimal trajectories from distance matrices.
 }
 \examples{
-\dontrun{
+\donttest{
+
+# Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+
   mincostflow(D.list)
 }
 }

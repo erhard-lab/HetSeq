@@ -11,11 +11,17 @@ prune(D.list, top.n = 10)
 
 \item{top.n}{Prune trajectories to only top.n possible connections to optimize subsequent application of the mincostflow function.}
 }
+\value{
+Pruned distance matrix between cells from multiple timepoints.
+}
 \description{
 Prune trajectories down to top.n candidates to reduce runtime of subsequent mincostflow function.
 }
 \examples{
-\dontrun{
+\donttest{
+
+# Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
+
   prune(D.list, top.n = 10)
 }
 }

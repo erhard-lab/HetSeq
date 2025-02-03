@@ -12,3 +12,8 @@ unable to verify current time
 * This is a new release.
 
 * Time stamp verification not working seems to be a general problem. 
+
+
+## Initial submission
+
+* Only contains donttest examples, as large dataset is needed. Reference to external vignette for hetseq.R & trajectories.R example added.

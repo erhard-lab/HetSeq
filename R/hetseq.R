@@ -20,7 +20,7 @@ NULL
 #' @param method The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.DoubleML.
 #' @param ... Parameters given to the chosen Hetseq method. See respective help pages.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 
@@ -46,7 +46,7 @@ Hetseq = function(method=c("test", "classify", "DoubleML"), ...){
 #' @param mat Gene expression matrix of control cells
 #' @param A Vector of cells (columns) in positive class
 #' @param B Vector of cells (columns) in negative class
-#' @return Table of log2FC, p-values and adjusted p-values of differentially expressed genes
+#' @return Table of log2FC, p-values and adjusted p-values of differentially expressed genes.
 #' @export
 HetseqTest = function(mat,A,B) {
   ps=sapply(1:nrow(mat),function(i) wilcox.test(mat[i,A],mat[i,B])$p.value)
@@ -77,7 +77,7 @@ HetseqTest = function(mat,A,B) {
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 
@@ -115,8 +115,6 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
   }
   object <- subset(object, cells = trajectories[,1], subset = Trajectory %in% compareGroups)
   object[["Trajectory"]] <- droplevels(object[["Trajectory"]])
-  print(table(object[["Trajectory"]]))
-  
   
   if(is.null(basefeatures)){
     basefeatures <- c("uninformative")
@@ -213,7 +211,7 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 
@@ -251,8 +249,6 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
   }
   object <- subset(object, cells = trajectories[,1], subset = Trajectory %in% compareGroups)
   object[["Trajectory"]] <- droplevels(object[["Trajectory"]])
-  print(table(object[["Trajectory"]]))
-  
   
   if(is.null(basefeatures)){
     basefeatures <- c("uninformative")
@@ -310,8 +306,7 @@ HetseqDoubleML <- function(object, trajectories, score.group = NULL, score.name=
     names(gene) <- "Gene"
     c(est,pval,gene)
   }
-  print("Iterations done")
-  
+
   # Stop parallel backend
   parallel::stopCluster(cl)
   foreach::registerDoSEQ()  
