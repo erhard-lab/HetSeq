@@ -18,7 +18,7 @@ Pruned distance matrix between cells from multiple timepoints.
 Prune trajectories down to top.n candidates to reduce runtime of subsequent mincostflow function.
 }
 \examples{
-\donttest{
+\dontrun{
 
 # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 

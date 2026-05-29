@@ -14,7 +14,7 @@
 #' @param linetype Set the linetype of the baseline AUC line.
 #' @return ggplot object.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   tab <- HetseqClassify(data, trajectories, score.name = "score")
 #'   PlotClassify(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 #' }
@@ -77,7 +77,7 @@ PlotClassify <- function(table, highlights=NULL, highlights.color=NULL, auc.cuto
 #' @param linetype Set the linetype of the p-value and estimate cutoff line.
 #' @return ggplot object.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   tab <- HetseqDoubleML(data, trajectories, score.name = "score")
 #'   PlotDoubleML(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 #' }

@@ -20,7 +20,7 @@ NULL
 #' @param method The method to run Heterogeneity-seq. Calls hetseq.test, hetseq.classify or hetseq.DoubleML.
 #' @param ... Parameters given to the chosen Hetseq method. See respective help pages.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 
@@ -77,7 +77,7 @@ HetseqTest = function(mat,A,B) {
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 
@@ -211,7 +211,7 @@ HetseqClassify<-function(object, trajectories, score.group = NULL, score.name=NU
 #' @return Table of log2FC and AUC values for each gene and an additional AUC value for the baseline features.
 #' @importFrom foreach %dopar%
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' 
 #' # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 #' 

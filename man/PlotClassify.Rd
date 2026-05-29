@@ -48,7 +48,7 @@ ggplot object.
 This plotting functions creates AUC Scatter plots to visualize Classifier Results.
 }
 \examples{
-\donttest{
+\dontrun{
   tab <- HetseqClassify(data, trajectories, score.name = "score")
   PlotClassify(tab, highlights=c("MYC", "GAPDH", "ISG15"))
 }

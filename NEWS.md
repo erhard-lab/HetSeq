@@ -1,4 +1,4 @@
-# HetSeq 0.1.0
+# HetSeq 0.1.1
 
 ## Initial CRAN Release
 

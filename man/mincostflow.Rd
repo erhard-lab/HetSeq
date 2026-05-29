@@ -18,7 +18,7 @@ Matrix of cell-cell trajectories spanning all given timepoints.
 Applies Min-Cost-Max-Flow to calculate optimal trajectories from distance matrices.
 }
 \examples{
-\donttest{
+\dontrun{
 
 # Full vignette available on https://grandr.erhard-lab.de/articles/web/hetseq.html
 
