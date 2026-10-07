@@ -2,7 +2,7 @@
 
 Heterogeneity-seq is a concept recently developed in our preprint on [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.10.28.620481v1). In short, tracing back perturbed cells to the most likely pre-perturbation control cells enables exploiting intercellular heterogeneity to identify factors that modulate cellular responses to perturbations. The HetSeq functions can be applied to calculate metabolic labeling based trajectories in a scSLAM-seq time course data set and subsequently identify pathway modulators with three different approaches. In general, these HetSeq approaches can also be applied in other types of data sets and trajectory calculation methods.
 
-The following tutorial considers the analysis of a scSLAM-seq time course data set using the Seurat package.
+The following tutorial considers the analysis of a scSLAM-seq time course data set using the Seurat package. A walkthrough analysis of the dexamethasone-treatment data set analyzed in the preprint can be found [here](https://grandr.erhard-lab.de/articles/web/hetseq.html).
 
 
 ## Installation
